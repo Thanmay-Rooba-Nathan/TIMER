@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Solving Timer</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom right, #4facfe, #00f2fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 6px;
+        }
+        input {
+            background: #e8f0fe;
+            color: #333;
+        }
+        button {
+            background: #ff6f61;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ff867c;
+        }
+        .timer {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .status {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Problem Solving Timer</h1>
+        <label for="timeInput">Set Time (in seconds):</label>
+        <input type="number" id="timeInput" placeholder="Enter seconds" min="1">
+        <button onclick="startTimer()">Start Timer</button>
+        <div class="timer" id="timerDisplay">00:00</div>
+        <div class="status" id="statusDisplay">Problems Solved: 0</div>
+    </div>
+
+    <script>
+        let timer;
+        let secondsRemaining = 0;
+        let problemCount = 0;
+
+        function startTimer() {
+            clearInterval(timer); // Clear any running timer
+            const timeInput = document.getElementById('timeInput').value;
+            secondsRemaining = parseInt(timeInput);
+            if (isNaN(secondsRemaining) || secondsRemaining <= 0) {
+                alert('Please enter a valid time in seconds.');
+                return;
+            }
+            updateTimerDisplay();
+            timer = setInterval(countDown, 1000);
+        }
+
+        function countDown() {
+            if (secondsRemaining > 0) {
+                secondsRemaining--;
+                updateTimerDisplay();
+            } else {
+                clearInterval(timer);
+                handleProblemCompletion();
+            }
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(secondsRemaining / 60);
+            const seconds = secondsRemaining % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function handleProblemCompletion() {
+            const userResponse = confirm('Did you complete the problem? Start next question?');
+            if (userResponse) {
+                problemCount++;
+                document.getElementById('statusDisplay').textContent = `Problems Solved: ${problemCount}`;
+                startTimer();
+            } else {
+                alert('Great effort! Take your time.');
+            }
+        }
+    </script>
+</body>
+</html>
