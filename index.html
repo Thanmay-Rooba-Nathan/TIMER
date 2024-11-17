@@ -61,6 +61,14 @@
             font-size: 18px;
             margin-top: 20px;
         }
+        .actions {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .actions button {
+            width: 45%;
+        }
     </style>
 </head>
 <body>
@@ -70,13 +78,21 @@
         <input type="number" id="timeInput" placeholder="Enter seconds" min="1">
         <button onclick="startTimer()">Start Timer</button>
         <div class="timer" id="timerDisplay">00:00</div>
-        <div class="status" id="statusDisplay">Problems Solved: 0</div>
+        <div class="status">
+            <p>Problems Solved: <span id="solvedCount">0</span></p>
+            <p>Problems Unsolved: <span id="unsolvedCount">0</span></p>
+        </div>
+        <div class="actions" id="actions" style="display: none;">
+            <button onclick="markSolved()">Solved</button>
+            <button onclick="markUnsolved()">Unsolved</button>
+        </div>
     </div>
 
     <script>
         let timer;
         let secondsRemaining = 0;
-        let problemCount = 0;
+        let solvedCount = 0;
+        let unsolvedCount = 0;
 
         function startTimer() {
             clearInterval(timer); // Clear any running timer
@@ -86,6 +102,7 @@
                 alert('Please enter a valid time in seconds.');
                 return;
             }
+            document.getElementById('actions').style.display = 'none'; // Hide actions
             updateTimerDisplay();
             timer = setInterval(countDown, 1000);
         }
@@ -96,26 +113,29 @@
                 updateTimerDisplay();
             } else {
                 clearInterval(timer);
-                handleProblemCompletion();
+                document.getElementById('actions').style.display = 'flex'; // Show actions
             }
         }
 
         function updateTimerDisplay() {
             const minutes = Math.floor(secondsRemaining / 60);
             const seconds = secondsRemaining % 60;
-            document.getElementById('timerDisplay').textContent = 
+            document.getElementById('timerDisplay').textContent =
                 `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
 
-        function handleProblemCompletion() {
-            const userResponse = confirm('Did you complete the problem? Start next question?');
-            if (userResponse) {
-                problemCount++;
-                document.getElementById('statusDisplay').textContent = `Problems Solved: ${problemCount}`;
-                startTimer();
-            } else {
-                alert('Great effort! Take your time.');
-            }
+        function markSolved() {
+            solvedCount++;
+            document.getElementById('solvedCount').textContent = solvedCount;
+            document.getElementById('actions').style.display = 'none';
+            startTimer();
+        }
+
+        function markUnsolved() {
+            unsolvedCount++;
+            document.getElementById('unsolvedCount').textContent = unsolvedCount;
+            document.getElementById('actions').style.display = 'none';
+            startTimer();
         }
     </script>
 </body>
